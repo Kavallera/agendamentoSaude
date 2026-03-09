@@ -2,20 +2,21 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>UNIP - LabManager</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            background: #003366;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
@@ -23,34 +24,32 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        /* Header com Logo */
+        /* Header com Logo - Versão Mobile */
         .header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #003366;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
             background: linear-gradient(to right, #f8f9fa, white);
             border-radius: 15px;
-            padding: 20px;
+            border-bottom: 3px solid #003366;
         }
 
         .logo-container {
-            flex-shrink: 0;
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             background: white;
             border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,51,102,0.2);
+            box-shadow: 0 4px 10px rgba(0,51,102,0.2);
             border: 2px solid #003366;
         }
 
@@ -59,95 +58,115 @@
             font-weight: bold;
             color: #003366;
             text-align: center;
-            line-height: 1.4;
-            padding: 10px;
-            background: white;
+            line-height: 1.3;
+            padding: 8px;
             width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .title-section {
-            flex-grow: 1;
+            text-align: center;
+            width: 100%;
         }
 
         .title-section h1 {
             color: #003366;
-            font-size: 2.2em;
+            font-size: 1.6rem;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .subtitle {
             color: #666;
-            font-size: 1.1em;
-            font-weight: 400;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
         }
 
         .unip-badge {
             background: #003366;
             color: white;
-            padding: 5px 15px;
-            border-radius: 25px;
-            font-size: 0.9em;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             display: inline-block;
-            margin-top: 10px;
         }
 
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 2.5em;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .dashboard {
+        /* Estatísticas em Grid Responsivo */
+        .stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 12px 5px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,51,102,0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 3px;
+        }
+
+        .stat-card p {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        /* Dashboard Mobile - Empilhado */
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .form-section {
             background: #f8f9fa;
-            padding: 25px;
+            padding: 18px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             border-top: 4px solid #003366;
         }
 
         .form-section h2 {
             color: #003366;
-            margin-bottom: 20px;
-            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: #555;
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 16px; /* Evita zoom automático no iOS */
             transition: border-color 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -156,58 +175,90 @@
         }
 
         textarea {
-            resize: vertical;
             min-height: 80px;
+        }
+
+        /* Ajuste para selects no iOS */
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 40px;
         }
 
         .btn {
             background: #003366;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 14px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
-            transition: transform 0.3s, background 0.3s;
+            transition: background 0.3s;
             width: 100%;
+            -webkit-appearance: none;
         }
 
-        .btn:hover {
+        .btn:active {
             background: #0066cc;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
+            transform: scale(0.98);
         }
 
         .btn-success {
             background: #28a745;
         }
 
-        .btn-success:hover {
+        .btn-success:active {
             background: #218838;
         }
 
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:active {
+            background: #c82333;
+        }
+
+        /* Área de Itens */
         .items-section {
-            margin-top: 20px;
+            margin-top: 15px;
             padding: 15px;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 2px dashed #003366;
         }
 
         .item-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 0.5fr 0.5fr;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .item-row input {
+            flex: 2;
+            min-width: 120px;
+        }
+
+        .item-row input[type="number"] {
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .item-row select {
+            flex: 0.8;
+            min-width: 70px;
+        }
+
+        .item-row button {
+            flex: 0.5;
+            min-width: 44px;
+            height: 44px;
+            padding: 0;
+            font-size: 1.2rem;
         }
 
         .item-list {
@@ -217,170 +268,200 @@
 
         .item-list li {
             background: #f1f3f5;
-            padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-left: 4px solid #003366;
+            font-size: 0.95rem;
         }
 
         .remove-item {
             color: #dc3545;
             cursor: pointer;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 22px;
+            padding: 5px 10px;
         }
 
+        /* Barra de Busca Mobile */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 14px;
+        }
+
+        .search-bar select {
+            width: 100%;
+            padding: 14px;
+        }
+
+        /* Cards de Solicitação Mobile */
         .requests-container {
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .request-card {
             background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
             margin-bottom: 15px;
-            transition: transform 0.3s;
             border-left: 4px solid #003366;
-        }
-
-        .request-card:hover {
-            transform: translateX(5px);
-            border-color: #003366;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .request-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 12px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .request-title {
-            font-size: 1.2em;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #003366;
         }
 
         .request-date {
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.8rem;
         }
 
         .request-details {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .request-details p {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
         }
 
         .purchase-list {
             background: #f8f9fa;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 12px;
+            margin-top: 10px;
         }
 
         .purchase-list h4 {
             color: #003366;
             margin-bottom: 10px;
+            font-size: 1rem;
         }
 
         .purchase-item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #e0e0e0;
+            font-size: 0.9rem;
         }
 
         .status-badge {
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.85em;
+            font-size: 0.8rem;
             font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-approved {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-completed {
-            background: #cce5ff;
-            color: #004085;
+            display: inline-block;
         }
 
         .request-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
 
-        .search-bar {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-bar input {
+        .request-actions button {
             flex: 1;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,51,102,0.3);
-        }
-
-        .stat-card h3 {
-            font-size: 2em;
-            margin-bottom: 5px;
+            min-width: 100px;
+            padding: 12px 5px;
+            font-size: 0.9rem;
         }
 
         .footer {
-            margin-top: 30px;
+            margin-top: 25px;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             color: #666;
             border-top: 1px solid #e0e0e0;
+            font-size: 0.8rem;
         }
 
-        .footer img {
-            height: 30px;
-            opacity: 0.7;
+        /* Ajustes para iPhone */
+        @media (max-width: 380px) {
+            .stat-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .stat-card p {
+                font-size: 0.65rem;
+            }
+            
+            .item-row {
+                flex-direction: column;
+            }
+            
+            .item-row input, 
+            .item-row select, 
+            .item-row button {
+                width: 100%;
+            }
+            
+            .request-actions {
+                flex-direction: column;
+            }
+            
+            .request-actions button {
+                width: 100%;
+            }
         }
 
-        @media (max-width: 768px) {
+        /* Ajuste para telas maiores */
+        @media (min-width: 768px) {
+            .header {
+                flex-direction: row;
+                text-align: left;
+            }
+            
+            .title-section {
+                text-align: left;
+            }
+            
+            .title-section h1 {
+                justify-content: flex-start;
+            }
+            
             .dashboard {
-                grid-template-columns: 1fr;
+                flex-direction: row;
+            }
+            
+            .search-bar {
+                flex-direction: row;
+            }
+            
+            .request-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
             }
             
             .request-details {
-                grid-template-columns: 1fr;
-            }
-
-            .header {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
             }
         }
     </style>
@@ -395,9 +476,11 @@
                 </div>
             </div>
             <div class="title-section">
-                <h1>🏥 LabManager Saúde</h1>
-                <div class="subtitle">Sistema de Gerenciamento de Laboratórios</div>
-                <div class="unip-badge">UNIP - Campus Chácara Santo Antônio</div>
+                <h1>
+                    <span>🏥</span> LabManager
+                </h1>
+                <div class="subtitle">Laboratórios de Saúde</div>
+                <div class="unip-badge">UNIP</div>
             </div>
         </div>
 
@@ -405,15 +488,15 @@
         <div class="stats" id="stats">
             <div class="stat-card">
                 <h3 id="totalRequests">0</h3>
-                <p>Total de Solicitações</p>
+                <p>Solicitações</p>
             </div>
             <div class="stat-card">
                 <h3 id="pendingRequests">0</h3>
-                <p>Solicitações Pendentes</p>
+                <p>Pendentes</p>
             </div>
             <div class="stat-card">
                 <h3 id="totalItems">0</h3>
-                <p>Itens Solicitados</p>
+                <p>Itens</p>
             </div>
         </div>
 
@@ -421,22 +504,22 @@
         <div class="dashboard">
             <!-- Formulário de Solicitação -->
             <div class="form-section">
-                <h2>📋 Nova Solicitação de Aula</h2>
+                <h2>📋 Nova Aula</h2>
                 <form id="requestForm">
                     <div class="form-group">
-                        <label for="professor">Professor Responsável:</label>
+                        <label>Professor:</label>
                         <input type="text" id="professor" required placeholder="Nome do professor">
                     </div>
                     <div class="form-group">
-                        <label for="discipline">Disciplina:</label>
+                        <label>Disciplina:</label>
                         <input type="text" id="discipline" required placeholder="Nome da disciplina">
                     </div>
                     <div class="form-group">
-                        <label for="classDate">Data da Aula:</label>
+                        <label>Data da Aula:</label>
                         <input type="date" id="classDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="labType">Laboratório:</label>
+                        <label>Laboratório:</label>
                         <select id="labType" required>
                             <option value="">Selecione...</option>
                             <option value="anatomia">Anatomia</option>
@@ -447,8 +530,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="observations">Observações:</label>
-                        <textarea id="observations" placeholder="Observações adicionais..."></textarea>
+                        <label>Observações:</label>
+                        <textarea id="observations" placeholder="Observações..."></textarea>
                     </div>
                 </form>
             </div>
@@ -458,22 +541,20 @@
                 <h2>🛒 Itens para Compra</h2>
                 <div class="items-section">
                     <div class="item-row">
-                        <input type="text" id="itemName" placeholder="Nome do item">
-                        <input type="number" id="itemQuantity" placeholder="Quantidade" min="1">
+                        <input type="text" id="itemName" placeholder="Item">
+                        <input type="number" id="itemQuantity" placeholder="Qtd" min="1">
                         <select id="itemUnit">
                             <option value="un">Un</option>
-                            <option value="cx">Caixa</option>
-                            <option value="lt">Litro</option>
-                            <option value="ml">ML</option>
-                            <option value="g">Grama</option>
-                            <option value="kg">KG</option>
+                            <option value="cx">Cx</option>
+                            <option value="lt">L</option>
+                            <option value="ml">mL</option>
+                            <option value="g">g</option>
+                            <option value="kg">kg</option>
                         </select>
                         <button class="btn btn-success" onclick="addItem()">+</button>
                     </div>
-                    <ul class="item-list" id="itemList">
-                        <!-- Itens serão adicionados aqui -->
-                    </ul>
-                    <button class="btn" onclick="submitRequest()">📤 Enviar Solicitação</button>
+                    <ul class="item-list" id="itemList"></ul>
+                    <button class="btn" onclick="submitRequest()">📤 Enviar</button>
                 </div>
             </div>
         </div>
@@ -482,7 +563,7 @@
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="🔍 Buscar solicitações...">
             <select id="filterStatus">
-                <option value="all">Todos os status</option>
+                <option value="all">Todos</option>
                 <option value="pending">Pendentes</option>
                 <option value="approved">Aprovadas</option>
                 <option value="completed">Concluídas</option>
@@ -491,14 +572,11 @@
         </div>
 
         <!-- Lista de Solicitações -->
-        <div class="requests-container" id="requestsContainer">
-            <!-- Solicitações serão inseridas aqui -->
-        </div>
+        <div class="requests-container" id="requestsContainer"></div>
 
-        <!-- Footer com créditos -->
+        <!-- Footer -->
         <div class="footer">
-            <p>© 2024 UNIVERSIDADE PAULISTA - Laboratórios de Saúde</p>
-            <p style="font-size: 0.9em; margin-top: 10px;">Sistema de Gerenciamento de Solicitações</p>
+            <p>UNIVERSIDADE PAULISTA - Laboratórios de Saúde</p>
         </div>
     </div>
 
@@ -512,7 +590,6 @@
             requests = JSON.parse(localStorage.getItem('labRequests'));
         }
 
-        // Função para adicionar item à lista
         function addItem() {
             const itemName = document.getElementById('itemName').value;
             const itemQuantity = document.getElementById('itemQuantity').value;
@@ -528,7 +605,6 @@
                 currentItems.push(item);
                 updateItemList();
                 
-                // Limpar campos
                 document.getElementById('itemName').value = '';
                 document.getElementById('itemQuantity').value = '';
             } else {
@@ -536,7 +612,6 @@
             }
         }
 
-        // Função para atualizar a lista de itens na interface
         function updateItemList() {
             const itemList = document.getElementById('itemList');
             itemList.innerHTML = '';
@@ -551,13 +626,11 @@
             });
         }
 
-        // Função para remover item da lista
         function removeItem(index) {
             currentItems.splice(index, 1);
             updateItemList();
         }
 
-        // Função para enviar solicitação
         function submitRequest() {
             const professor = document.getElementById('professor').value;
             const discipline = document.getElementById('discipline').value;
@@ -593,7 +666,6 @@
             updateUI();
         }
 
-        // Função para limpar formulário
         function clearForm() {
             document.getElementById('professor').value = '';
             document.getElementById('discipline').value = '';
@@ -604,12 +676,10 @@
             updateItemList();
         }
 
-        // Função para salvar no localStorage
         function saveToLocalStorage() {
             localStorage.setItem('labRequests', JSON.stringify(requests));
         }
 
-        // Função para atualizar status da solicitação
         function updateStatus(id, newStatus) {
             const request = requests.find(r => r.id === id);
             if (request) {
@@ -619,7 +689,6 @@
             }
         }
 
-        // Função para excluir solicitação
         function deleteRequest(id) {
             if (confirm('Tem certeza que deseja excluir esta solicitação?')) {
                 requests = requests.filter(r => r.id !== id);
@@ -628,13 +697,11 @@
             }
         }
 
-        // Função para atualizar a interface
         function updateUI() {
             updateStats();
             displayRequests();
         }
 
-        // Função para atualizar estatísticas
         function updateStats() {
             document.getElementById('totalRequests').textContent = requests.length;
             document.getElementById('pendingRequests').textContent = 
@@ -644,7 +711,6 @@
             document.getElementById('totalItems').textContent = totalItems;
         }
 
-        // Função para exibir solicitações
         function displayRequests() {
             const container = document.getElementById('requestsContainer');
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -652,12 +718,10 @@
 
             let filteredRequests = requests;
 
-            // Filtrar por status
             if (filterStatus !== 'all') {
                 filteredRequests = filteredRequests.filter(r => r.status === filterStatus);
             }
 
-            // Filtrar por termo de busca
             if (searchTerm) {
                 filteredRequests = filteredRequests.filter(r => 
                     r.professor.toLowerCase().includes(searchTerm) ||
@@ -667,7 +731,7 @@
             }
 
             if (filteredRequests.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma solicitação encontrada.</p>';
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Nenhuma solicitação encontrada.</p>';
                 return;
             }
 
@@ -679,13 +743,13 @@
                     </div>
                     <div class="request-details">
                         <div>
-                            <p><strong>Professor:</strong> ${request.professor}</p>
-                            <p><strong>Laboratório:</strong> ${getLabName(request.labType)}</p>
-                            <p><strong>Data da Aula:</strong> ${formatDate(request.classDate)}</p>
-                            ${request.observations ? `<p><strong>Obs:</strong> ${request.observations}</p>` : ''}
+                            <p><strong>👨‍🏫</strong> ${request.professor}</p>
+                            <p><strong>🔬</strong> ${getLabName(request.labType)}</p>
+                            <p><strong>📅</strong> ${formatDate(request.classDate)}</p>
+                            ${request.observations ? `<p><strong>📝</strong> ${request.observations}</p>` : ''}
                         </div>
                         <div class="purchase-list">
-                            <h4>Itens para Compra (${request.items.length})</h4>
+                            <h4>🛒 Itens (${request.items.length})</h4>
                             ${request.items.map(item => `
                                 <div class="purchase-item">
                                     <span>${item.name}</span>
@@ -694,7 +758,7 @@
                             `).join('')}
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; flex-wrap: wrap; gap: 10px;">
                         <span class="status-badge status-${request.status}">
                             ${getStatusName(request.status)}
                         </span>
@@ -712,13 +776,11 @@
             `).join('');
         }
 
-        // Função auxiliar para formatar data
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('pt-BR');
         }
 
-        // Função auxiliar para nome do laboratório
         function getLabName(labType) {
             const labs = {
                 'anatomia': 'Anatomia',
@@ -730,7 +792,6 @@
             return labs[labType] || labType;
         }
 
-        // Função auxiliar para nome do status
         function getStatusName(status) {
             const statusNames = {
                 'pending': 'Pendente',
@@ -740,19 +801,15 @@
             return statusNames[status] || status;
         }
 
-        // Função para filtrar solicitações
         function filterRequests() {
             displayRequests();
         }
 
-        // Adicionar evento de busca
         document.getElementById('searchInput').addEventListener('input', filterRequests);
         document.getElementById('filterStatus').addEventListener('change', filterRequests);
 
-        // Inicializar a interface
         updateUI();
 
-        // Definir data mínima para o campo de data
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('classDate').min = today;
     </script>
