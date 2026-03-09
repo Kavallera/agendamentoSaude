@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>UNIP Chácara Santo Antônio - LabManager</title>
+    <title>UNIP - LabManager</title>
     <style>
         * {
             margin: 0;
@@ -163,7 +163,7 @@
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 16px; /* Evita zoom automático no iOS */
+            font-size: 16px;
             transition: border-color 0.3s;
             -webkit-appearance: none;
             appearance: none;
@@ -379,6 +379,21 @@
             display: inline-block;
         }
 
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+
         .request-actions {
             display: flex;
             gap: 8px;
@@ -507,27 +522,20 @@
                 <h2>📋 Nova Aula</h2>
                 <form id="requestForm">
                     <div class="form-group">
-                        <label>Professor:</label>
+                        <label>Professor Responsável:</label>
                         <input type="text" id="professor" required placeholder="Nome do professor">
                     </div>
                     <div class="form-group">
-                        <label>Disciplina:</label>
-                        <input type="text" id="discipline" required placeholder="Nome da disciplina">
+                        <label>Curso:</label>
+                        <input type="text" id="course" required placeholder="Nome do curso">
                     </div>
                     <div class="form-group">
                         <label>Data da Aula:</label>
                         <input type="date" id="classDate" required>
                     </div>
                     <div class="form-group">
-                        <label>Laboratório:</label>
-                        <select id="labType" required>
-                            <option value="">Selecione...</option>
-                            <option value="anatomia">Anatomia</option>
-                            <option value="microbiologia">Microbiologia</option>
-                            <option value="bioquimica">Bioquímica</option>
-                            <option value="fisiologia">Fisiologia</option>
-                            <option value="farmacologia">Farmacologia</option>
-                        </select>
+                        <label>Horário:</label>
+                        <input type="time" id="classTime" required placeholder="Horário da aula">
                     </div>
                     <div class="form-group">
                         <label>Observações:</label>
@@ -541,7 +549,7 @@
                 <h2>🛒 Itens para Compra</h2>
                 <div class="items-section">
                     <div class="item-row">
-                        <input type="text" id="itemName" placeholder="Item">
+                        <input type="text" id="itemName" placeholder="Nome do item">
                         <input type="number" id="itemQuantity" placeholder="Qtd" min="1">
                         <select id="itemUnit">
                             <option value="un">Un</option>
@@ -554,7 +562,7 @@
                         <button class="btn btn-success" onclick="addItem()">+</button>
                     </div>
                     <ul class="item-list" id="itemList"></ul>
-                    <button class="btn" onclick="submitRequest()">📤 Enviar</button>
+                    <button class="btn" onclick="submitRequest()">📤 Enviar Solicitação</button>
                 </div>
             </div>
         </div>
@@ -563,7 +571,7 @@
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="🔍 Buscar solicitações...">
             <select id="filterStatus">
-                <option value="all">Todos</option>
+                <option value="all">Todos os status</option>
                 <option value="pending">Pendentes</option>
                 <option value="approved">Aprovadas</option>
                 <option value="completed">Concluídas</option>
@@ -633,12 +641,12 @@
 
         function submitRequest() {
             const professor = document.getElementById('professor').value;
-            const discipline = document.getElementById('discipline').value;
+            const course = document.getElementById('course').value;
             const classDate = document.getElementById('classDate').value;
-            const labType = document.getElementById('labType').value;
+            const classTime = document.getElementById('classTime').value;
             const observations = document.getElementById('observations').value;
 
-            if (!professor || !discipline || !classDate || !labType) {
+            if (!professor || !course || !classDate || !classTime) {
                 alert('Preencha todos os campos da solicitação!');
                 return;
             }
@@ -651,9 +659,9 @@
             const request = {
                 id: Date.now(),
                 professor,
-                discipline,
+                course,
                 classDate,
-                labType,
+                classTime,
                 observations,
                 items: [...currentItems],
                 status: 'pending',
@@ -668,9 +676,9 @@
 
         function clearForm() {
             document.getElementById('professor').value = '';
-            document.getElementById('discipline').value = '';
+            document.getElementById('course').value = '';
             document.getElementById('classDate').value = '';
-            document.getElementById('labType').value = '';
+            document.getElementById('classTime').value = '';
             document.getElementById('observations').value = '';
             currentItems = [];
             updateItemList();
@@ -725,8 +733,8 @@
             if (searchTerm) {
                 filteredRequests = filteredRequests.filter(r => 
                     r.professor.toLowerCase().includes(searchTerm) ||
-                    r.discipline.toLowerCase().includes(searchTerm) ||
-                    r.labType.toLowerCase().includes(searchTerm)
+                    r.course.toLowerCase().includes(searchTerm) ||
+                    r.observations?.toLowerCase().includes(searchTerm)
                 );
             }
 
@@ -738,15 +746,16 @@
             container.innerHTML = filteredRequests.map(request => `
                 <div class="request-card">
                     <div class="request-header">
-                        <span class="request-title">${request.discipline}</span>
+                        <span class="request-title">${request.course}</span>
                         <span class="request-date">${request.createdAt}</span>
                     </div>
                     <div class="request-details">
                         <div>
-                            <p><strong>👨‍🏫</strong> ${request.professor}</p>
-                            <p><strong>🔬</strong> ${getLabName(request.labType)}</p>
-                            <p><strong>📅</strong> ${formatDate(request.classDate)}</p>
-                            ${request.observations ? `<p><strong>📝</strong> ${request.observations}</p>` : ''}
+                            <p><strong>👨‍🏫 Professor:</strong> ${request.professor}</p>
+                            <p><strong>📚 Curso:</strong> ${request.course}</p>
+                            <p><strong>📅 Data:</strong> ${formatDate(request.classDate)}</p>
+                            <p><strong>⏰ Horário:</strong> ${formatTime(request.classTime)}</p>
+                            ${request.observations ? `<p><strong>📝 Obs:</strong> ${request.observations}</p>` : ''}
                         </div>
                         <div class="purchase-list">
                             <h4>🛒 Itens (${request.items.length})</h4>
@@ -781,15 +790,8 @@
             return date.toLocaleDateString('pt-BR');
         }
 
-        function getLabName(labType) {
-            const labs = {
-                'anatomia': 'Anatomia',
-                'microbiologia': 'Microbiologia',
-                'bioquimica': 'Bioquímica',
-                'fisiologia': 'Fisiologia',
-                'farmacologia': 'Farmacologia'
-            };
-            return labs[labType] || labType;
+        function formatTime(timeString) {
+            return timeString; // Já vem no formato HH:MM
         }
 
         function getStatusName(status) {
