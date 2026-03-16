@@ -666,9 +666,9 @@
     </div>
 
     <script>
-        // 🔴 COLE SEUS DADOS DO JSONBIN.IO AQUI!
-        const BIN_ID = '69b7fbb4c3097a1dd52d49dd'; // Substitua pelo seu ID
-        const API_KEY = '$2a$10$.4fFmMZeJDD4NS9GxoQLrO3l9VCeZIKb5bVkUUZ0/cvCTykfsR/k6'; // Substitua pela sua API Key
+        // 🔴 SEUS DADOS DO JSONBIN.IO INSERIDOS AQUI!
+        const BIN_ID = '69b7fbb4c3097a1dd52d49dd';
+        const API_KEY = '$2a$10$.4fFmMZeJDD4NS9GxoQLrO3l9VCeZIKb5bVkUUZ0/cvCTykfsR/k6';
 
         // Array para armazenar as solicitações
         let requests = [];
@@ -992,7 +992,7 @@
                             <p><strong>👨‍🏫 Professor:</strong> ${request.professor}</p>
                             <p><strong>📚 Curso:</strong> ${request.course}</p>
                             <p><strong>📅 Data:</strong> ${formatDate(request.classDate)}</p>
-                            <p><strong>⏰ Horário:</strong> ${formatTime(request.classTime)}</p>
+                            <p><strong>⏰ Horário:</strong> ${request.classTime}</p>
                             ${request.observations ? `<p><strong>📝 Obs:</strong> ${request.observations}</p>` : ''}
                         </div>
                         <div class="purchase-list">
@@ -1024,12 +1024,8 @@
         }
 
         function formatDate(dateString) {
-            const date = new Date(dateString + 'T12:00:00'); // Adiciona meio-dia para evitar problemas de fuso
+            const date = new Date(dateString + 'T12:00:00');
             return date.toLocaleDateString('pt-BR');
-        }
-
-        function formatTime(timeString) {
-            return timeString;
         }
 
         function getStatusName(status) {
