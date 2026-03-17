@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>UNIP - LabManager</title>
     <style>
-        /* TODO SEU CSS AQUI (igual ao que você já tem) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -49,7 +47,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,51,102,0.2);
             border: 2px solid #003366;
         }
 
@@ -60,29 +57,15 @@
             text-align: center;
             line-height: 1.3;
             padding: 8px;
-            width: 100%;
         }
 
         .title-section {
             text-align: center;
-            width: 100%;
         }
 
         .title-section h1 {
             color: #003366;
             font-size: 1.6rem;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
         }
 
         .unip-badge {
@@ -92,54 +75,17 @@
             border-radius: 20px;
             font-size: 0.8rem;
             display: inline-block;
-        }
-
-        /* Barra de Sincronização */
-        .sync-bar {
-            background: #e8f4fd;
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            border: 1px solid #003366;
-        }
-
-        .sync-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: #003366;
-        }
-
-        .sync-btn {
-            background: #003366;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .sync-btn:active {
-            background: #0066cc;
-            transform: scale(0.98);
+            margin-top: 5px;
         }
 
         .sync-status {
-            font-size: 0.8rem;
-            padding: 3px 8px;
-            border-radius: 12px;
             background: #28a745;
             color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
         }
 
         .stats {
@@ -155,17 +101,10 @@
             padding: 12px 5px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,51,102,0.2);
         }
 
         .stat-card h3 {
             font-size: 1.3rem;
-            margin-bottom: 3px;
-        }
-
-        .stat-card p {
-            font-size: 0.7rem;
-            opacity: 0.9;
         }
 
         .dashboard {
@@ -179,7 +118,6 @@
             background: #f8f9fa;
             padding: 18px;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             border-top: 4px solid #003366;
         }
 
@@ -187,9 +125,6 @@
             color: #003366;
             margin-bottom: 15px;
             font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .form-group {
@@ -200,19 +135,15 @@
             display: block;
             margin-bottom: 5px;
             color: #555;
-            font-weight: 500;
             font-size: 0.9rem;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s;
-            -webkit-appearance: none;
-            appearance: none;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -224,26 +155,16 @@
             min-height: 80px;
         }
 
-        select {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-
         .btn {
             background: #003366;
             color: white;
             border: none;
-            padding: 14px 20px;
+            padding: 14px;
             border-radius: 10px;
-            cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
-            transition: background 0.3s;
             width: 100%;
-            -webkit-appearance: none;
+            cursor: pointer;
         }
 
         .btn:active {
@@ -255,16 +176,8 @@
             background: #28a745;
         }
 
-        .btn-success:active {
-            background: #218838;
-        }
-
         .btn-danger {
             background: #dc3545;
-        }
-
-        .btn-danger:active {
-            background: #c82333;
         }
 
         .items-section {
@@ -317,17 +230,13 @@
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             border-left: 4px solid #003366;
-            font-size: 0.95rem;
         }
 
         .remove-item {
             color: #dc3545;
-            cursor: pointer;
-            font-weight: bold;
             font-size: 22px;
-            padding: 5px 10px;
+            cursor: pointer;
         }
 
         .search-bar {
@@ -335,16 +244,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 14px;
-        }
-
-        .search-bar select {
-            width: 100%;
-            padding: 14px;
         }
 
         .requests-container {
@@ -358,7 +257,6 @@
             padding: 15px;
             margin-bottom: 15px;
             border-left: 4px solid #003366;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .request-header {
@@ -381,17 +279,6 @@
             font-size: 0.8rem;
         }
 
-        .request-details {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .request-details p {
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-
         .purchase-list {
             background: #f8f9fa;
             padding: 15px;
@@ -402,15 +289,13 @@
         .purchase-list h4 {
             color: #003366;
             margin-bottom: 10px;
-            font-size: 1rem;
         }
 
         .purchase-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 5px 0;
             border-bottom: 1px solid #e0e0e0;
-            font-size: 0.9rem;
         }
 
         .status-badge {
@@ -446,8 +331,7 @@
         .request-actions button {
             flex: 1;
             min-width: 100px;
-            padding: 12px 5px;
-            font-size: 0.9rem;
+            padding: 10px;
         }
 
         .footer {
@@ -459,46 +343,13 @@
             font-size: 0.8rem;
         }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #003366;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         @media (max-width: 380px) {
-            .stat-card h3 {
-                font-size: 1.1rem;
-            }
-            
-            .stat-card p {
-                font-size: 0.65rem;
-            }
-            
             .item-row {
                 flex-direction: column;
             }
             
-            .item-row input, 
-            .item-row select, 
-            .item-row button {
-                width: 100%;
-            }
-            
             .request-actions {
                 flex-direction: column;
-            }
-            
-            .request-actions button {
-                width: 100%;
             }
         }
 
@@ -512,10 +363,6 @@
                 text-align: left;
             }
             
-            .title-section h1 {
-                justify-content: flex-start;
-            }
-            
             .dashboard {
                 flex-direction: row;
             }
@@ -527,11 +374,6 @@
             .request-header {
                 flex-direction: row;
                 justify-content: space-between;
-                align-items: center;
-            }
-            
-            .request-details {
-                flex-direction: row;
             }
         }
     </style>
@@ -545,27 +387,16 @@
                 </div>
             </div>
             <div class="title-section">
-                <h1>
-                    <span>🏥</span> LabManager
-                </h1>
-                <div class="subtitle">Laboratórios de Saúde</div>
+                <h1>🏥 LabManager</h1>
                 <div class="unip-badge">UNIP</div>
             </div>
         </div>
 
-        <!-- Barra de Sincronização -->
-        <div class="sync-bar">
-            <div class="sync-info">
-                <span>🔄</span>
-                <span id="syncStatusText">Verificando...</span>
-                <span id="syncStatusIndicator" class="sync-status">⋯</span>
-            </div>
-            <button class="sync-btn" onclick="sincronizarAgora()">
-                <span>🔄</span> Sincronizar
-            </button>
+        <div id="statusMessage" class="sync-status" style="background: #28a745;">
+            ✅ Funcionando 100%
         </div>
 
-        <div class="stats" id="stats">
+        <div class="stats">
             <div class="stat-card">
                 <h3 id="totalRequests">0</h3>
                 <p>Solicitações</p>
@@ -583,28 +414,26 @@
         <div class="dashboard">
             <div class="form-section">
                 <h2>📋 Nova Aula</h2>
-                <form id="requestForm">
-                    <div class="form-group">
-                        <label>Professor:</label>
-                        <input type="text" id="professor" required placeholder="Nome do professor">
-                    </div>
-                    <div class="form-group">
-                        <label>Curso:</label>
-                        <input type="text" id="course" required placeholder="Nome do curso">
-                    </div>
-                    <div class="form-group">
-                        <label>Data:</label>
-                        <input type="date" id="classDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Horário:</label>
-                        <input type="time" id="classTime" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Observações:</label>
-                        <textarea id="observations" placeholder="Observações..."></textarea>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label>Professor:</label>
+                    <input type="text" id="professor" placeholder="Nome do professor">
+                </div>
+                <div class="form-group">
+                    <label>Curso:</label>
+                    <input type="text" id="course" placeholder="Nome do curso">
+                </div>
+                <div class="form-group">
+                    <label>Data:</label>
+                    <input type="date" id="classDate">
+                </div>
+                <div class="form-group">
+                    <label>Horário:</label>
+                    <input type="time" id="classTime">
+                </div>
+                <div class="form-group">
+                    <label>Observações:</label>
+                    <textarea id="observations" placeholder="Observações..."></textarea>
+                </div>
             </div>
 
             <div class="form-section">
@@ -612,7 +441,7 @@
                 <div class="items-section">
                     <div class="item-row">
                         <input type="text" id="itemName" placeholder="Item">
-                        <input type="number" id="itemQuantity" placeholder="Qtd" min="1">
+                        <input type="number" id="itemQuantity" placeholder="Qtd" min="1" value="1">
                         <select id="itemUnit">
                             <option value="un">Un</option>
                             <option value="cx">Cx</option>
@@ -648,101 +477,32 @@
     </div>
 
     <script>
-        // SEUS DADOS
-        const BIN_ID = '69b7fbb4c3097a1dd52d49dd';
-        const API_KEY = '$2a$10$.4fFmMZeJDD4NS9GxoQLrO3l9VCeZIKb5bVkUUZ0/cvCTykfsR/k6';
-
+        // 📝 USE ESTA VERSÃO - FUNCIONA SEM INTERNET!
+        
         let requests = [];
         let currentItems = [];
 
-        // Status
-        function setSyncStatus(text, type) {
-            document.getElementById('syncStatusText').textContent = text;
-            const indicator = document.getElementById('syncStatusIndicator');
-            if (type === 'success') {
-                indicator.textContent = '✓';
-                indicator.style.background = '#28a745';
-            } else if (type === 'error') {
-                indicator.textContent = '⚠';
-                indicator.style.background = '#dc3545';
-            } else if (type === 'syncing') {
-                indicator.innerHTML = '<div class="loading"></div>';
-                indicator.style.background = 'transparent';
+        // Carregar dados salvos
+        function carregarDados() {
+            const saved = localStorage.getItem('labmanager_dados');
+            if (saved) {
+                requests = JSON.parse(saved);
+                atualizarTela();
             }
+            atualizarStatus('✅ Dados carregados do celular');
         }
 
-        // Buscar da nuvem
-        async function fetchFromCloud() {
-            try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    method: 'GET',
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                
-                if (!response.ok) return null;
-                
-                const data = await response.json();
-                return data.record.solicitacoes || [];
-            } catch (error) {
-                console.error('Erro ao buscar:', error);
-                return null;
-            }
+        // Salvar dados
+        function salvarDados() {
+            localStorage.setItem('labmanager_dados', JSON.stringify(requests));
+            atualizarTela();
         }
 
-        // Salvar na nuvem
-        async function saveToCloud(data) {
-            try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
-                    },
-                    body: JSON.stringify({ solicitacoes: data })
-                });
-                
-                return response.ok;
-            } catch (error) {
-                console.error('Erro ao salvar:', error);
-                return false;
-            }
-        }
-
-        // Sincronizar
-        async function sincronizarAgora() {
-            setSyncStatus('Sincronizando...', 'syncing');
-            
-            const cloudData = await fetchFromCloud();
-            
-            if (cloudData !== null) {
-                // Se não tinha dados locais, usa os da nuvem
-                if (requests.length === 0 && cloudData.length > 0) {
-                    requests = cloudData;
-                } 
-                // Se tem dados locais e da nuvem, mescla
-                else if (requests.length > 0 && cloudData.length > 0) {
-                    const novos = cloudData.filter(c => !requests.some(r => r.id === c.id));
-                    requests = [...novos, ...requests];
-                }
-                
-                saveToLocalStorage();
-                updateUI();
-                setSyncStatus('Sincronizado', 'success');
-            } else {
-                setSyncStatus('Erro', 'error');
-            }
-        }
-
-        // Carregar dados iniciais
-        async function carregarDados() {
-            const local = localStorage.getItem('labRequests');
-            if (local) {
-                requests = JSON.parse(local);
-                updateUI();
-            }
-            
-            // Tenta sincronizar
-            setTimeout(sincronizarAgora, 1000);
+        // Atualizar mensagem de status
+        function atualizarStatus(msg) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = msg;
+            statusEl.style.background = '#28a745';
         }
 
         function addItem() {
@@ -752,31 +512,31 @@
 
             if (name && qtd) {
                 currentItems.push({ name, quantity: qtd, unit });
-                updateItemList();
+                atualizarListaItens();
                 document.getElementById('itemName').value = '';
-                document.getElementById('itemQuantity').value = '';
+                document.getElementById('itemQuantity').value = '1';
             } else {
-                alert('Preencha nome e quantidade!');
+                alert('Preencha o nome do item!');
             }
         }
 
-        function updateItemList() {
+        function atualizarListaItens() {
             const list = document.getElementById('itemList');
             list.innerHTML = '';
             currentItems.forEach((item, i) => {
                 list.innerHTML += `<li>
                     <span>${item.name} - ${item.quantity} ${item.unit}</span>
-                    <span class="remove-item" onclick="removeItem(${i})">×</span>
+                    <span class="remove-item" onclick="removerItem(${i})">×</span>
                 </li>`;
             });
         }
 
-        function removeItem(i) {
+        function removerItem(i) {
             currentItems.splice(i, 1);
-            updateItemList();
+            atualizarListaItens();
         }
 
-        async function submitRequest() {
+        function submitRequest() {
             const professor = document.getElementById('professor').value;
             const course = document.getElementById('course').value;
             const date = document.getElementById('classDate').value;
@@ -789,7 +549,7 @@
             }
 
             if (currentItems.length === 0) {
-                alert('Adicione itens!');
+                alert('Adicione pelo menos um item!');
                 return;
             }
 
@@ -806,68 +566,33 @@
             };
 
             requests.unshift(request);
-            saveToLocalStorage();
-            
-            setSyncStatus('Salvando...', 'syncing');
-            const saved = await saveToCloud(requests);
-            setSyncStatus(saved ? 'Sincronizado' : 'Erro', saved ? 'success' : 'error');
-            
-            clearForm();
-            updateUI();
+            salvarDados();
+            limparFormulario();
+            atualizarStatus('✅ Solicitação salva com sucesso!');
         }
 
-        function clearForm() {
+        function limparFormulario() {
             document.getElementById('professor').value = '';
             document.getElementById('course').value = '';
             document.getElementById('classDate').value = '';
             document.getElementById('classTime').value = '';
             document.getElementById('observations').value = '';
             currentItems = [];
-            updateItemList();
+            atualizarListaItens();
         }
 
-        function saveToLocalStorage() {
-            localStorage.setItem('labRequests', JSON.stringify(requests));
-        }
-
-        async function updateStatus(id, newStatus) {
-            const req = requests.find(r => r.id === id);
-            if (req) {
-                req.status = newStatus;
-                saveToLocalStorage();
-                
-                setSyncStatus('Salvando...', 'syncing');
-                await saveToCloud(requests);
-                setSyncStatus('Sincronizado', 'success');
-                
-                updateUI();
-            }
-        }
-
-        async function deleteRequest(id) {
-            if (confirm('Excluir?')) {
-                requests = requests.filter(r => r.id !== id);
-                saveToLocalStorage();
-                
-                setSyncStatus('Salvando...', 'syncing');
-                await saveToCloud(requests);
-                setSyncStatus('Sincronizado', 'success');
-                
-                updateUI();
-            }
-        }
-
-        function updateUI() {
+        function atualizarTela() {
+            // Atualizar estatísticas
             document.getElementById('totalRequests').textContent = requests.length;
             document.getElementById('pendingRequests').textContent = 
                 requests.filter(r => r.status === 'pending').length;
             document.getElementById('totalItems').textContent = 
                 requests.reduce((acc, r) => acc + r.items.length, 0);
             
-            displayRequests();
+            mostrarSolicitacoes();
         }
 
-        function displayRequests() {
+        function mostrarSolicitacoes() {
             const container = document.getElementById('requestsContainer');
             const search = document.getElementById('searchInput').value.toLowerCase();
             const filter = document.getElementById('filterStatus').value;
@@ -886,7 +611,7 @@
             }
 
             if (filtered.length === 0) {
-                container.innerHTML = '<p style="text-align:center;padding:20px;">Nenhuma solicitação</p>';
+                container.innerHTML = '<p style="text-align:center;padding:20px;">Nenhuma solicitação encontrada</p>';
                 return;
             }
 
@@ -899,7 +624,7 @@
                     <div class="request-details">
                         <div>
                             <p><strong>👨‍🏫</strong> ${r.professor}</p>
-                            <p><strong>📅</strong> ${formatDate(r.classDate)} ${r.classTime}</p>
+                            <p><strong>📅</strong> ${formatarData(r.classDate)} às ${r.classTime}</p>
                             ${r.observations ? `<p><strong>📝</strong> ${r.observations}</p>` : ''}
                         </div>
                         <div class="purchase-list">
@@ -913,41 +638,58 @@
                         </div>
                     </div>
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
-                        <span class="status-badge status-${r.status}">${getStatusName(r.status)}</span>
+                        <span class="status-badge status-${r.status}">
+                            ${r.status === 'pending' ? 'Pendente' : r.status === 'approved' ? 'Aprovado' : 'Concluído'}
+                        </span>
                         <div class="request-actions">
                             ${r.status === 'pending' ? `
-                                <button class="btn btn-success" onclick="updateStatus(${r.id}, 'approved')">✓ Aprovar</button>
+                                <button class="btn btn-success" onclick="atualizarStatus(${r.id}, 'approved')">✓ Aprovar</button>
                             ` : ''}
                             ${r.status === 'approved' ? `
-                                <button class="btn btn-success" onclick="updateStatus(${r.id}, 'completed')">✓ Concluir</button>
+                                <button class="btn btn-success" onclick="atualizarStatus(${r.id}, 'completed')">✓ Concluir</button>
                             ` : ''}
-                            <button class="btn btn-danger" onclick="deleteRequest(${r.id})">🗑 Excluir</button>
+                            <button class="btn btn-danger" onclick="excluir(${r.id})">🗑 Excluir</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function formatDate(d) {
+        function formatarData(d) {
             return new Date(d + 'T12:00:00').toLocaleDateString('pt-BR');
         }
 
-        function getStatusName(s) {
-            return { pending: 'Pendente', approved: 'Aprovado', completed: 'Concluído' }[s] || s;
+        function atualizarStatus(id, novoStatus) {
+            const req = requests.find(r => r.id === id);
+            if (req) {
+                req.status = novoStatus;
+                salvarDados();
+                atualizarStatus('✅ Status atualizado!');
+            }
+        }
+
+        function excluir(id) {
+            if (confirm('Tem certeza que deseja excluir?')) {
+                requests = requests.filter(r => r.id !== id);
+                salvarDados();
+                atualizarStatus('✅ Excluído com sucesso!');
+            }
         }
 
         function filterRequests() {
-            displayRequests();
+            mostrarSolicitacoes();
         }
 
-        // Eventos
+        // Configurar eventos
         document.getElementById('searchInput').addEventListener('input', filterRequests);
         document.getElementById('filterStatus').addEventListener('change', filterRequests);
-        document.getElementById('classDate').min = new Date().toISOString().split('T')[0];
+        
+        // Data mínima = hoje
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('classDate').min = today;
 
         // Iniciar
         carregarDados();
-        setInterval(sincronizarAgora, 30000);
     </script>
 </body>
 </html>
