@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>UNIP - LabManager</title>
+    <title>UNIP - LabManager Colaborativo</title>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -78,14 +83,33 @@
             margin-top: 5px;
         }
 
-        .sync-status {
+        .online-status {
             background: #28a745;
             color: white;
-            padding: 8px 15px;
+            padding: 8px;
             border-radius: 10px;
             margin-bottom: 15px;
             text-align: center;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .stats {
@@ -107,11 +131,39 @@
             font-size: 1.3rem;
         }
 
-        .dashboard {
+        .stat-card p {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            gap: 10px;
             margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: #003366;
+            color: white;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
         }
 
         .form-section {
@@ -119,6 +171,7 @@
             padding: 18px;
             border-radius: 15px;
             border-top: 4px solid #003366;
+            margin-bottom: 20px;
         }
 
         .form-section h2 {
@@ -135,6 +188,7 @@
             display: block;
             margin-bottom: 5px;
             color: #555;
+            font-weight: 500;
             font-size: 0.9rem;
         }
 
@@ -165,6 +219,7 @@
             font-weight: 600;
             width: 100%;
             cursor: pointer;
+            margin-bottom: 10px;
         }
 
         .btn:active {
@@ -180,12 +235,17 @@
             background: #dc3545;
         }
 
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
         .items-section {
-            margin-top: 15px;
             padding: 15px;
             background: white;
             border-radius: 12px;
             border: 2px dashed #003366;
+            margin-bottom: 15px;
         }
 
         .item-row {
@@ -237,6 +297,7 @@
             color: #dc3545;
             font-size: 22px;
             cursor: pointer;
+            padding: 0 5px;
         }
 
         .search-bar {
@@ -289,13 +350,29 @@
         .purchase-list h4 {
             color: #003366;
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .purchase-item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #e0e0e0;
+        }
+
+        .purchase-item.completed {
+            text-decoration: line-through;
+            color: #999;
+            background: #f0f0f0;
+        }
+
+        .item-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
         }
 
         .status-badge {
@@ -311,14 +388,14 @@
             color: #856404;
         }
 
-        .status-approved {
-            background: #d4edda;
-            color: #155724;
+        .status-in-progress {
+            background: #cce5ff;
+            color: #004085;
         }
 
         .status-completed {
-            background: #cce5ff;
-            color: #004085;
+            background: #d4edda;
+            color: #155724;
         }
 
         .request-actions {
@@ -332,6 +409,7 @@
             flex: 1;
             min-width: 100px;
             padding: 10px;
+            font-size: 0.9rem;
         }
 
         .footer {
@@ -341,6 +419,21 @@
             color: #666;
             border-top: 1px solid #e0e0e0;
             font-size: 0.8rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            border-radius: 4px;
+            transition: width 0.3s;
         }
 
         @media (max-width: 380px) {
@@ -363,10 +456,6 @@
                 text-align: left;
             }
             
-            .dashboard {
-                flex-direction: row;
-            }
-            
             .search-bar {
                 flex-direction: row;
             }
@@ -387,13 +476,14 @@
                 </div>
             </div>
             <div class="title-section">
-                <h1>🏥 LabManager</h1>
-                <div class="unip-badge">UNIP</div>
+                <h1>🏥 LabManager Colaborativo</h1>
+                <div class="unip-badge">UNIP - Tempo Real</div>
             </div>
         </div>
 
-        <div id="statusMessage" class="sync-status" style="background: #28a745;">
-            ✅ Funcionando 100%
+        <div id="onlineStatus" class="online-status">
+            <span class="online-dot"></span>
+            <span>🟢 Online - Atualizando em tempo real</span>
         </div>
 
         <div class="stats">
@@ -403,44 +493,44 @@
             </div>
             <div class="stat-card">
                 <h3 id="pendingRequests">0</h3>
-                <p>Pendentes</p>
+                <p>Em Andamento</p>
             </div>
             <div class="stat-card">
-                <h3 id="totalItems">0</h3>
-                <p>Itens</p>
+                <h3 id="completedRequests">0</h3>
+                <p>Concluídas</p>
             </div>
         </div>
 
-        <div class="dashboard">
+        <div class="tabs">
+            <button class="tab active" onclick="mudarAba('solicitante')">📝 Solicitante</button>
+            <button class="tab" onclick="mudarAba('comprador')">🛒 Comprador</button>
+        </div>
+
+        <!-- ABA DO SOLICITANTE -->
+        <div id="abaSolicitante" class="dashboard active">
             <div class="form-section">
-                <h2>📋 Nova Aula</h2>
+                <h2>📋 Nova Solicitação de Compra</h2>
                 <div class="form-group">
-                    <label>Professor:</label>
-                    <input type="text" id="professor" placeholder="Nome do professor">
+                    <label>Solicitante:</label>
+                    <input type="text" id="solicitante" placeholder="Seu nome" value="Pessoa 1">
                 </div>
                 <div class="form-group">
-                    <label>Curso:</label>
-                    <input type="text" id="course" placeholder="Nome do curso">
+                    <label>Setor/Curso:</label>
+                    <input type="text" id="setor" placeholder="Ex: Laboratório de Anatomia">
                 </div>
                 <div class="form-group">
-                    <label>Data:</label>
-                    <input type="date" id="classDate">
-                </div>
-                <div class="form-group">
-                    <label>Horário:</label>
-                    <input type="time" id="classTime">
+                    <label>Data necessária:</label>
+                    <input type="date" id="dataNecessaria">
                 </div>
                 <div class="form-group">
                     <label>Observações:</label>
-                    <textarea id="observations" placeholder="Observações..."></textarea>
+                    <textarea id="observacoes" placeholder="Informações adicionais..."></textarea>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <h2>🛒 Itens</h2>
                 <div class="items-section">
+                    <h3>🛒 Itens para Compra</h3>
                     <div class="item-row">
-                        <input type="text" id="itemName" placeholder="Item">
+                        <input type="text" id="itemName" placeholder="Nome do item">
                         <input type="number" id="itemQuantity" placeholder="Qtd" min="1" value="1">
                         <select id="itemUnit">
                             <option value="un">Un</option>
@@ -450,68 +540,120 @@
                             <option value="g">g</option>
                             <option value="kg">kg</option>
                         </select>
-                        <button class="btn btn-success" onclick="addItem()">+</button>
+                        <button class="btn btn-success" onclick="adicionarItem()">+</button>
                     </div>
                     <ul class="item-list" id="itemList"></ul>
-                    <button class="btn" onclick="submitRequest()">📤 Enviar</button>
+                    
+                    <button class="btn" onclick="enviarSolicitacao()">📤 Enviar Solicitação</button>
                 </div>
+            </div>
+
+            <div class="form-section">
+                <h2>📊 Minhas Solicitações</h2>
+                <div class="search-bar">
+                    <input type="text" id="searchSolicitante" placeholder="🔍 Buscar...">
+                </div>
+                <div id="minhasSolicitacoes" class="requests-container"></div>
             </div>
         </div>
 
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar...">
-            <select id="filterStatus">
-                <option value="all">Todos</option>
-                <option value="pending">Pendentes</option>
-                <option value="approved">Aprovadas</option>
-                <option value="completed">Concluídas</option>
-            </select>
-            <button class="btn" onclick="filterRequests()">Filtrar</button>
+        <!-- ABA DO COMPRADOR -->
+        <div id="abaComprador" class="dashboard">
+            <div class="form-section">
+                <h2>🛒 Compras Pendentes</h2>
+                <div class="search-bar">
+                    <input type="text" id="searchComprador" placeholder="🔍 Buscar itens...">
+                    <select id="filtroStatus">
+                        <option value="todos">Todos</option>
+                        <option value="pendente">Pendentes</option>
+                        <option value="andamento">Em Andamento</option>
+                        <option value="concluido">Concluídos</option>
+                    </select>
+                    <button class="btn" onclick="aplicarFiltro()">Filtrar</button>
+                </div>
+                <div id="comprasPendentes" class="requests-container"></div>
+            </div>
         </div>
 
-        <div class="requests-container" id="requestsContainer"></div>
-
         <div class="footer">
-            <p>UNIVERSIDADE PAULISTA - Laboratórios de Saúde</p>
+            <p>UNIVERSIDADE PAULISTA - Sistema Colaborativo em Tempo Real</p>
+            <p style="font-size: 0.7rem; margin-top: 5px;">Acesse em: https://seuusuario.github.io/labmanager-unip</p>
         </div>
     </div>
 
     <script>
-        // 📝 USE ESTA VERSÃO - FUNCIONA SEM INTERNET!
-        
-        let requests = [];
+        // 🔴 SEU FIREBASE CONFIG (JÁ CONFIGURADO!)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCO8qEAZthrUG9A73Pei4k_ZawrkZ1Gyas",
+            authDomain: "labmanager-unip-8155c.firebaseapp.com",
+            projectId: "labmanager-unip-8155c",
+            storageBucket: "labmanager-unip-8155c.firebasestorage.app",
+            messagingSenderId: "841412953986",
+            appId: "1:841412953986:web:0f5cded6566828b7c0319b"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Variáveis globais
         let currentItems = [];
+        let todasSolicitacoes = [];
+        let comprador = localStorage.getItem('comprador_nome') || 'Comprador ' + Math.floor(Math.random() * 100);
 
-        // Carregar dados salvos
-        function carregarDados() {
-            const saved = localStorage.getItem('labmanager_dados');
-            if (saved) {
-                requests = JSON.parse(saved);
-                atualizarTela();
-            }
-            atualizarStatus('✅ Dados carregados do celular');
+        // Iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarSolicitacoes();
+            document.getElementById('dataNecessaria').min = new Date().toISOString().split('T')[0];
+        });
+
+        // Carregar solicitações em tempo real
+        function carregarSolicitacoes() {
+            db.collection("solicitacoes")
+              .orderBy("criadoEm", "desc")
+              .onSnapshot((querySnapshot) => {
+                  todasSolicitacoes = [];
+                  querySnapshot.forEach((doc) => {
+                      todasSolicitacoes.push({
+                          id: doc.id,
+                          ...doc.data()
+                      });
+                  });
+                  atualizarTudo();
+              }, (error) => {
+                  console.error("Erro ao carregar:", error);
+                  document.getElementById('onlineStatus').innerHTML = '🔴 Erro de conexão';
+              });
         }
 
-        // Salvar dados
-        function salvarDados() {
-            localStorage.setItem('labmanager_dados', JSON.stringify(requests));
-            atualizarTela();
+        function atualizarTudo() {
+            atualizarEstatisticas();
+            mostrarMinhasSolicitacoes();
+            mostrarComprasPendentes();
         }
 
-        // Atualizar mensagem de status
-        function atualizarStatus(msg) {
-            const statusEl = document.getElementById('statusMessage');
-            statusEl.textContent = msg;
-            statusEl.style.background = '#28a745';
+        function atualizarEstatisticas() {
+            document.getElementById('totalRequests').textContent = todasSolicitacoes.length;
+            document.getElementById('pendingRequests').textContent = 
+                todasSolicitacoes.filter(s => s.status !== 'concluido').length;
+            document.getElementById('completedRequests').textContent = 
+                todasSolicitacoes.filter(s => s.status === 'concluido').length;
         }
 
-        function addItem() {
+        function adicionarItem() {
             const name = document.getElementById('itemName').value;
             const qtd = document.getElementById('itemQuantity').value;
             const unit = document.getElementById('itemUnit').value;
 
             if (name && qtd) {
-                currentItems.push({ name, quantity: qtd, unit });
+                currentItems.push({ 
+                    nome: name, 
+                    quantidade: qtd, 
+                    unidade: unit,
+                    comprado: false,
+                    compradoPor: null,
+                    compradoEm: null
+                });
                 atualizarListaItens();
                 document.getElementById('itemName').value = '';
                 document.getElementById('itemQuantity').value = '1';
@@ -525,7 +667,7 @@
             list.innerHTML = '';
             currentItems.forEach((item, i) => {
                 list.innerHTML += `<li>
-                    <span>${item.name} - ${item.quantity} ${item.unit}</span>
+                    <span>${item.nome} - ${item.quantidade} ${item.unidade}</span>
                     <span class="remove-item" onclick="removerItem(${i})">×</span>
                 </li>`;
             });
@@ -536,14 +678,13 @@
             atualizarListaItens();
         }
 
-        function submitRequest() {
-            const professor = document.getElementById('professor').value;
-            const course = document.getElementById('course').value;
-            const date = document.getElementById('classDate').value;
-            const time = document.getElementById('classTime').value;
-            const obs = document.getElementById('observations').value;
+        async function enviarSolicitacao() {
+            const solicitante = document.getElementById('solicitante').value;
+            const setor = document.getElementById('setor').value;
+            const dataNecessaria = document.getElementById('dataNecessaria').value;
+            const observacoes = document.getElementById('observacoes').value;
 
-            if (!professor || !course || !date || !time) {
+            if (!solicitante || !setor || !dataNecessaria) {
                 alert('Preencha todos os campos!');
                 return;
             }
@@ -553,143 +694,230 @@
                 return;
             }
 
-            const request = {
-                id: Date.now(),
-                professor,
-                course,
-                classDate: date,
-                classTime: time,
-                observations: obs,
-                items: [...currentItems],
-                status: 'pending',
-                createdAt: new Date().toLocaleDateString('pt-BR')
+            const solicitacao = {
+                solicitante: solicitante,
+                setor: setor,
+                dataNecessaria: dataNecessaria,
+                observacoes: observacoes,
+                itens: currentItems.map(item => ({
+                    ...item,
+                    itemId: Date.now() + Math.random()
+                })),
+                status: 'pendente',
+                criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+                criadoPor: solicitante,
+                totalItens: currentItems.length,
+                itensComprados: 0
             };
 
-            requests.unshift(request);
-            salvarDados();
-            limparFormulario();
-            atualizarStatus('✅ Solicitação salva com sucesso!');
+            try {
+                await db.collection("solicitacoes").add(solicitacao);
+                alert('Solicitação enviada com sucesso!');
+                limparFormulario();
+            } catch (error) {
+                console.error("Erro ao enviar:", error);
+                alert('Erro ao enviar solicitação');
+            }
         }
 
         function limparFormulario() {
-            document.getElementById('professor').value = '';
-            document.getElementById('course').value = '';
-            document.getElementById('classDate').value = '';
-            document.getElementById('classTime').value = '';
-            document.getElementById('observations').value = '';
+            document.getElementById('solicitante').value = 'Pessoa 1';
+            document.getElementById('setor').value = '';
+            document.getElementById('dataNecessaria').value = '';
+            document.getElementById('observacoes').value = '';
             currentItems = [];
             atualizarListaItens();
         }
 
-        function atualizarTela() {
-            // Atualizar estatísticas
-            document.getElementById('totalRequests').textContent = requests.length;
-            document.getElementById('pendingRequests').textContent = 
-                requests.filter(r => r.status === 'pending').length;
-            document.getElementById('totalItems').textContent = 
-                requests.reduce((acc, r) => acc + r.items.length, 0);
+        function mostrarMinhasSolicitacoes() {
+            const container = document.getElementById('minhasSolicitacoes');
+            const search = document.getElementById('searchSolicitante')?.value.toLowerCase() || '';
             
-            mostrarSolicitacoes();
-        }
+            const minhas = todasSolicitacoes.filter(s => 
+                s.solicitante === document.getElementById('solicitante').value
+            );
 
-        function mostrarSolicitacoes() {
-            const container = document.getElementById('requestsContainer');
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const filter = document.getElementById('filterStatus').value;
+            const filtradas = search ? minhas.filter(s => 
+                s.setor.toLowerCase().includes(search) ||
+                s.observacoes?.toLowerCase().includes(search)
+            ) : minhas;
 
-            let filtered = requests;
-
-            if (filter !== 'all') {
-                filtered = filtered.filter(r => r.status === filter);
-            }
-
-            if (search) {
-                filtered = filtered.filter(r => 
-                    r.professor.toLowerCase().includes(search) ||
-                    r.course.toLowerCase().includes(search)
-                );
-            }
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="text-align:center;padding:20px;">Nenhuma solicitação encontrada</p>';
+            if (filtradas.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:20px;">Nenhuma solicitação sua</p>';
                 return;
             }
 
-            container.innerHTML = filtered.map(r => `
+            container.innerHTML = filtradas.map(s => `
                 <div class="request-card">
                     <div class="request-header">
-                        <span class="request-title">${r.course}</span>
-                        <span class="request-date">${r.createdAt}</span>
+                        <span class="request-title">${s.setor}</span>
+                        <span class="request-date">${formatarData(s.criadoEm)}</span>
                     </div>
-                    <div class="request-details">
-                        <div>
-                            <p><strong>👨‍🏫</strong> ${r.professor}</p>
-                            <p><strong>📅</strong> ${formatarData(r.classDate)} às ${r.classTime}</p>
-                            ${r.observations ? `<p><strong>📝</strong> ${r.observations}</p>` : ''}
-                        </div>
-                        <div class="purchase-list">
-                            <h4>🛒 Itens (${r.items.length})</h4>
-                            ${r.items.map(i => `
-                                <div class="purchase-item">
-                                    <span>${i.name}</span>
-                                    <span>${i.quantity} ${i.unit}</span>
-                                </div>
-                            `).join('')}
-                        </div>
+                    <p><strong>Data necessária:</strong> ${formatarDataString(s.dataNecessaria)}</p>
+                    ${s.observacoes ? `<p><strong>Obs:</strong> ${s.observacoes}</p>` : ''}
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${((s.itensComprados || 0) / s.totalItens) * 100}%"></div>
                     </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
-                        <span class="status-badge status-${r.status}">
-                            ${r.status === 'pending' ? 'Pendente' : r.status === 'approved' ? 'Aprovado' : 'Concluído'}
-                        </span>
-                        <div class="request-actions">
-                            ${r.status === 'pending' ? `
-                                <button class="btn btn-success" onclick="atualizarStatus(${r.id}, 'approved')">✓ Aprovar</button>
-                            ` : ''}
-                            ${r.status === 'approved' ? `
-                                <button class="btn btn-success" onclick="atualizarStatus(${r.id}, 'completed')">✓ Concluir</button>
-                            ` : ''}
-                            <button class="btn btn-danger" onclick="excluir(${r.id})">🗑 Excluir</button>
-                        </div>
+                    
+                    <div class="purchase-list">
+                        <h4>
+                            Itens (${s.itensComprados || 0}/${s.totalItens})
+                            <span class="status-badge status-${s.status}">
+                                ${s.status === 'concluido' ? 'Concluído' : 'Em Andamento'}
+                            </span>
+                        </h4>
+                        ${s.itens.map(item => `
+                            <div class="purchase-item ${item.comprado ? 'completed' : ''}">
+                                <span>${item.nome} - ${item.quantidade} ${item.unidade}</span>
+                                <span>${item.comprado ? `✅ ${item.compradoPor || 'Alguém'}` : '⏳'}</span>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `).join('');
         }
 
-        function formatarData(d) {
-            return new Date(d + 'T12:00:00').toLocaleDateString('pt-BR');
+        function mostrarComprasPendentes() {
+            const container = document.getElementById('comprasPendentes');
+            const search = document.getElementById('searchComprador')?.value.toLowerCase() || '';
+            const filtro = document.getElementById('filtroStatus')?.value || 'todos';
+
+            let pendentes = todasSolicitacoes.filter(s => s.status !== 'concluido');
+
+            if (filtro !== 'todos') {
+                pendentes = pendentes.filter(s => s.status === filtro);
+            }
+
+            if (search) {
+                pendentes = pendentes.filter(s => 
+                    s.setor.toLowerCase().includes(search) ||
+                    s.itens.some(i => i.nome.toLowerCase().includes(search))
+                );
+            }
+
+            if (pendentes.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:20px;">Nenhuma compra pendente</p>';
+                return;
+            }
+
+            container.innerHTML = pendentes.map(s => `
+                <div class="request-card">
+                    <div class="request-header">
+                        <span class="request-title">${s.setor}</span>
+                        <span class="request-date">Solicitado por: ${s.solicitante}</span>
+                    </div>
+                    <p><strong>Data necessária:</strong> ${formatarDataString(s.dataNecessaria)}</p>
+                    
+                    <div class="purchase-list">
+                        <h4>Itens para comprar (${s.itensComprados || 0}/${s.totalItens})</h4>
+                        ${s.itens.map(item => `
+                            <div class="purchase-item ${item.comprado ? 'completed' : ''}">
+                                <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                                    ${!item.comprado ? `
+                                        <input type="checkbox" class="item-checkbox" 
+                                            onchange="marcarItemComprado('${s.id}', '${item.itemId}')">
+                                    ` : `
+                                        <span>✅</span>
+                                    `}
+                                    <span style="flex:1">${item.nome}</span>
+                                    <span>${item.quantidade} ${item.unidade}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${s.itensComprados === s.totalItens ? `
+                        <button class="btn btn-success" onclick="finalizarSolicitacao('${s.id}')">
+                            ✅ Finalizar Solicitação
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
         }
 
-        function atualizarStatus(id, novoStatus) {
-            const req = requests.find(r => r.id === id);
-            if (req) {
-                req.status = novoStatus;
-                salvarDados();
-                atualizarStatus('✅ Status atualizado!');
+        async function marcarItemComprado(solicitacaoId, itemId) {
+            const compradorNome = prompt('Digite seu nome (para identificação):', comprador);
+            if (!compradorNome) return;
+            
+            comprador = compradorNome;
+            localStorage.setItem('comprador_nome', compradorNome);
+
+            try {
+                const solicitacaoRef = db.collection("solicitacoes").doc(solicitacaoId);
+                const doc = await solicitacaoRef.get();
+                const solicitacao = doc.data();
+                
+                const itensAtualizados = solicitacao.itens.map(item => {
+                    if (item.itemId == itemId) {
+                        return {
+                            ...item,
+                            comprado: true,
+                            compradoPor: compradorNome,
+                            compradoEm: new Date().toISOString()
+                        };
+                    }
+                    return item;
+                });
+
+                const itensComprados = itensAtualizados.filter(i => i.comprado).length;
+                const novoStatus = itensComprados === solicitacao.totalItens ? 'andamento' : 'pendente';
+
+                await solicitacaoRef.update({
+                    itens: itensAtualizados,
+                    itensComprados: itensComprados,
+                    status: novoStatus
+                });
+
+            } catch (error) {
+                console.error("Erro ao marcar item:", error);
+                alert('Erro ao marcar item como comprado');
             }
         }
 
-        function excluir(id) {
-            if (confirm('Tem certeza que deseja excluir?')) {
-                requests = requests.filter(r => r.id !== id);
-                salvarDados();
-                atualizarStatus('✅ Excluído com sucesso!');
+        async function finalizarSolicitacao(id) {
+            if (confirm('Confirmar que todos os itens foram comprados?')) {
+                try {
+                    await db.collection("solicitacoes").doc(id).update({
+                        status: 'concluido'
+                    });
+                } catch (error) {
+                    console.error("Erro ao finalizar:", error);
+                }
             }
         }
 
-        function filterRequests() {
-            mostrarSolicitacoes();
+        function aplicarFiltro() {
+            mostrarComprasPendentes();
         }
 
-        // Configurar eventos
-        document.getElementById('searchInput').addEventListener('input', filterRequests);
-        document.getElementById('filterStatus').addEventListener('change', filterRequests);
-        
-        // Data mínima = hoje
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('classDate').min = today;
+        function mudarAba(aba) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.dashboard').forEach(d => d.classList.remove('active'));
+            
+            if (aba === 'solicitante') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('abaSolicitante').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('abaComprador').classList.add('active');
+            }
+        }
 
-        // Iniciar
-        carregarDados();
+        function formatarData(timestamp) {
+            if (!timestamp) return 'Agora mesmo';
+            const date = timestamp.toDate();
+            return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR');
+        }
+
+        function formatarDataString(dataString) {
+            return new Date(dataString + 'T12:00:00').toLocaleDateString('pt-BR');
+        }
+
+        // Event listeners
+        document.getElementById('searchSolicitante')?.addEventListener('input', mostrarMinhasSolicitacoes);
+        document.getElementById('searchComprador')?.addEventListener('input', mostrarComprasPendentes);
+        document.getElementById('filtroStatus')?.addEventListener('change', mostrarComprasPendentes);
     </script>
 </body>
 </html>
